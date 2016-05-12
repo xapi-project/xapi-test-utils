@@ -1,0 +1,15 @@
+OASISFormat:                0.4
+Name:                       xapi-test-utils
+Version:                    0.9.0
+Synopsis:                   Unit-test utilities
+Authors:                    John Else and Euan Harris
+License:                    LGPL-2.1 with OCaml linking exception
+BuildTools:                 ocamlbuild
+Plugins:                    META (0.4), DevFiles (0.4)
+
+Library xapi_test_utils
+  CompiledObject:           best
+  Path:                     lib
+  Findlibname:              xapi-test-utils
+  Modules:                  Test_highlevel, Test_printers
+  BuildDepends:             oUnit, stdext, threads
