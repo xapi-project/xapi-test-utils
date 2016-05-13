@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/xapi-project/xapi-test-utils.svg?branch=master)](https://travis-ci.org/xapi-project/xapi-test-utils)
+
 This framework should be useful if you want to apply lots of different
 inputs to a function or system, and check that the output is correct in
 each case.
