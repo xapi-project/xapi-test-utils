@@ -1,6 +1,8 @@
 # OASIS_START
 # DO NOT EDIT (digest: a3c674b4239234cbbe53afe090018954)
 
+DESTDIR ?=
+
 SETUP = ocaml setup.ml
 
 build: setup.data
@@ -16,10 +18,10 @@ all:
 	$(SETUP) -all $(ALLFLAGS)
 
 install: setup.data
-	$(SETUP) -install $(INSTALLFLAGS)
+	OCAMLFIND_DESTDIR=$(DESTDIR) $(SETUP) -install $(INSTALLFLAGS)
 
 uninstall: setup.data
-	$(SETUP) -uninstall $(UNINSTALLFLAGS)
+	OCAMLFIND_DESTDIR=$(DESTDIR) $(SETUP) -uninstall $(UNINSTALLFLAGS)
 
 reinstall: setup.data
 	$(SETUP) -reinstall $(REINSTALLFLAGS)
