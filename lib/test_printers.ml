@@ -38,10 +38,10 @@ let option : 'a printer -> 'a option printer = fun pr x ->
 	| None -> "None"
 	| Some s -> pr s |> Printf.sprintf "Some %s"
 
-let either : 'a printer -> 'b printer -> ('a, 'b) Either.t printer = fun pr_a pr_b x ->
+let either : 'a printer -> 'b printer -> ('a, 'b) Stdext.Either.t printer = fun pr_a pr_b x ->
 	match x with
-	| Either.Left a ->  pr_a a |> Printf.sprintf "Left %s"
-	| Either.Right b -> pr_b b |> Printf.sprintf "Right %s"
+	| Stdext.Either.Left a ->  pr_a a |> Printf.sprintf "Left %s"
+	| Stdext.Either.Right b -> pr_b b |> Printf.sprintf "Right %s"
 
 (* Utility function to bracket a string *)
 let bracket l r x = Printf.sprintf "%s%s%s" l x r
