@@ -1,43 +1,21 @@
-# OASIS_START
-# DO NOT EDIT (digest: a3c674b4239234cbbe53afe090018954)
 
-DESTDIR ?=
+.PHONY: release build install uninstall clean reindent
 
-SETUP = ocaml setup.ml
+build:
+	jbuilder build @install --dev
 
-build: setup.data
-	$(SETUP) -build $(BUILDFLAGS)
+release:
+	jbuilder build @install
 
-doc: setup.data build
-	$(SETUP) -doc $(DOCFLAGS)
+install:
+	jbuilder install
 
-test: setup.data build
-	$(SETUP) -test $(TESTFLAGS)
-
-all:
-	$(SETUP) -all $(ALLFLAGS)
-
-install: setup.data
-	OCAMLFIND_DESTDIR=$(DESTDIR) $(SETUP) -install $(INSTALLFLAGS)
-
-uninstall: setup.data
-	OCAMLFIND_DESTDIR=$(DESTDIR) $(SETUP) -uninstall $(UNINSTALLFLAGS)
-
-reinstall: setup.data
-	$(SETUP) -reinstall $(REINSTALLFLAGS)
+uninstall:
+	jbuilder uninstall
 
 clean:
-	$(SETUP) -clean $(CLEANFLAGS)
+	jbuilder clean
 
-distclean:
-	$(SETUP) -distclean $(DISTCLEANFLAGS)
+reindent:
+	git ls-files '**/*.ml' | xargs ocp-indent --inplace
 
-setup.data:
-	$(SETUP) -configure $(CONFIGUREFLAGS)
-
-configure:
-	$(SETUP) -configure $(CONFIGUREFLAGS)
-
-.PHONY: build doc test all install uninstall reinstall clean distclean configure
-
-# OASIS_STOP

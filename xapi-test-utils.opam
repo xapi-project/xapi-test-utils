@@ -4,20 +4,10 @@ authors: "xen-api@lists.xen.org"
 homepage: "https://xapi-project.github.io/"
 bug-reports: "https://github.com/xapi-project/xapi-test-utils/issues"
 dev-repo: "git://github.com/xapi-project/xapi-test-utils.git"
-build: [
-  ["./configure"]
-  [make]
-]
-install: [
-  [make "install"]
-]
-remove: [
-  ["ocamlfind" "remove" "xapi-test-utils"]
-]
+build: [[ "jbuilder" "build" "-p" name "-j" jobs ]]
 depends: [
-  "oasis" {build}
+  "jbuilder" {build}
   "ounit"
-  "ocamlfind" {build}
-  "xapi-stdext" {>= "2.0.0"}
+  "xapi-stdext-monadic"
 ]
 tags: [ "org:xapi-project" ]
