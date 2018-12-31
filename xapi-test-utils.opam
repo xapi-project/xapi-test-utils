@@ -1,13 +1,15 @@
-opam-version: "1.2"
+opam-version: "2.0"
 maintainer: "rob.hoes@citrix.com"
 authors: "xen-api@lists.xen.org"
 homepage: "https://xapi-project.github.io/"
 bug-reports: "https://github.com/xapi-project/xapi-test-utils/issues"
 dev-repo: "git://github.com/xapi-project/xapi-test-utils.git"
-build: [[ "jbuilder" "build" "-p" name "-j" jobs ]]
+build: [[ "dune" "build" "-p" name "-j" jobs ]]
 depends: [
-  "jbuilder" {build}
+  "ocaml"
+  "dune" {build}
   "ounit"
   "xapi-stdext-monadic"
 ]
 tags: [ "org:xapi-project" ]
+synopsis: "An OCaml package with modules for easy unit testing"
