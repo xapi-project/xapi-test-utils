@@ -1,6 +1,0 @@
-(library
- ((name xapi_test_utils)
-  (public_name xapi-test-utils)
-  (wrapped false)
-  (libraries (oUnit threads xapi-stdext-monadic))
- ))
