@@ -12,8 +12,6 @@
  * GNU Lesser General Public License for more details.
  *)
 
-open OUnit
-
 module Generic = struct
 	module type IO = sig
 		(* The type of inputs to a system being tested. *)
@@ -38,7 +36,8 @@ module Generic = struct
 		(* A function to transform an input into an output. *)
 		val transform : Io.input_t -> Io.output_t
 		(* A list of input/output pairs. *)
-		val tests : (Io.input_t * Io.output_t) list
+    val tests : [> `Documented of (string * Alcotest.speed_level * Io.input_t  * Io.output_t) list
+                |  `QuickAndAutoDocumented of (Io.input_t * Io.output_t) list]
 	end
 
 	module type STATEFUL_TEST = sig
@@ -50,7 +49,8 @@ module Generic = struct
 		 * may depend on the input to the test. *)
 		val extract_output : State.state_t -> Io.input_t -> Io.output_t
 		(* A list of input/output pairs. *)
-		val tests : (Io.input_t * Io.output_t) list
+    val tests : [> `Documented of (string * Alcotest.speed_level * Io.input_t  * Io.output_t) list
+                |  `QuickAndAutoDocumented of (Io.input_t * Io.output_t) list]
 	end
 
 	(* Turn a stateful test module into a stateless test module. *)
@@ -65,25 +65,43 @@ module Generic = struct
 		let tests = T.tests
 	end
 
-	(* Create functions which will actually run a test or tests. *)
-	module Make(T: STATELESS_TEST) = struct
-		let test_equal ~input ~expected_output =
-			let title = Printf.sprintf "%s -> %s" 
-				(T.Io.string_of_input_t input)
-				(T.Io.string_of_output_t expected_output) in
-			title >:: (fun () -> 
-				let actual_output = T.transform input in
-				assert_equal
-					~msg:(Printf.sprintf
-						"Failure: input = %s, output = %s, expected output = %s"
+  module MakeStateless(T: STATELESS_TEST) : sig
+    val tests : unit Alcotest.test_case list
+  end
+  = struct
+    let title input expected_output = Printf.sprintf "%s -> %s"
 						(T.Io.string_of_input_t input)
-						(T.Io.string_of_output_t actual_output)
-						(T.Io.string_of_output_t expected_output))
-					actual_output expected_output)
+        (T.Io.string_of_output_t expected_output) |> String.trim
 
-		let tests =
+    let prune_if_too_long s idx =
+      let max_size = 70 in
+      let len = String.length s in
+      if len <= max_size then
+        s
+      else
+        let template = Format.sprintf "%d: %s...%s" idx in
+        let slice_len = (max_size - String.length (template "" "")) / 2 in
+        template (String.sub s 0 slice_len) (String.sub s (len - slice_len - 1) slice_len)
+
+    let test_equal ~input ~expected_output () =
+      let alco_testable = Test_util.alcotestable_of_pp T.Io.string_of_output_t in
+      Alcotest.check alco_testable (title input expected_output) expected_output (T.transform input)
+
+    let tests = match T.tests with
+      | `Documented ts ->
 			List.map
-				(fun (input, expected_output) -> test_equal ~input ~expected_output)
-				T.tests
+          (fun (doc_str, speed, input, expected_output) ->
+             (doc_str, speed, test_equal ~input ~expected_output)) ts
+      | `QuickAndAutoDocumented ts ->
+        List.mapi
+          (fun idx (input, expected_output) ->
+             let doc_str = prune_if_too_long (title input expected_output) idx in
+             (doc_str, `Quick, test_equal ~input ~expected_output)) ts
 	end
+
+  module MakeStateful(T: STATEFUL_TEST) : sig
+    val tests : unit Alcotest.test_case list
+  end = MakeStateless(EncapsulateState(T))
 end
+
+let make_suite prefix = List.map (fun (s, t) -> Format.sprintf "%s%s" prefix s, t)

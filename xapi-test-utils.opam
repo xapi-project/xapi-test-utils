@@ -8,8 +8,8 @@ build: [[ "dune" "build" "-p" name "-j" jobs ]]
 depends: [
   "ocaml"
   "dune" {build}
-  "ounit"
   "xapi-stdext-monadic"
+  "alcotest"
 ]
 tags: [ "org:xapi-project" ]
 synopsis: "An OCaml package with modules for easy unit testing"

@@ -7,15 +7,6 @@ each case.
 The basic idea is to either:
 
 1. Create a module of type `STATELESS_TEST` or
-2. Create a module of type `STATEFUL_TEST` and turn it into a `STATELESS_TEST`
-with the `EncapsulateState` functor
+2. Create a module of type `STATEFUL_TEST`
 
-and then pass the `STATELESS_TEST` into the Make functor.
-
-This gives you a module with two values:
-* `test_equal`, a function which takes an input and expected output,
-  and tests that the actual output equals the expected output.
-* `tests`, which has type `OUnit.test list`. This is a list of tests
-  corresponding to the input/output pairs specified as tests in the
-  original `STATELESS_TEST` or `STATEFUL_TEST` module, and can be integrated
-  into the main OUnit suite.
+Passing this the the appropriate `Make` functor will yield a module which can be run with alcotest. See `xen-api` for examples.
