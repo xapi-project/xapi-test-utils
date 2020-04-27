@@ -76,6 +76,14 @@ let tuple5 :
   |> String.concat ", "
   |> bracket "(" ")"
 
+let tuple6 : 'a printer -> 'b printer -> 'c printer -> 'd printer -> 'e printer -> 'f printer ->
+	('a * 'b * 'c * 'd * 'e * 'f) printer = fun pr_a pr_b pr_c pr_d pr_e pr_f (a, b, c, d, e, f) ->
+    [pr_a a; pr_b b; pr_c c; pr_d d; pr_e e; pr_f f;] |> String.concat ", " |> bracket "(" ")"
+
+let tuple7 : 'a printer -> 'b printer -> 'c printer -> 'd printer -> 'e printer -> 'f printer -> 'g printer ->
+	('a * 'b * 'c * 'd * 'e * 'f * 'g) printer = fun pr_a pr_b pr_c pr_d pr_e pr_f pr_g (a, b, c, d, e, f, g) ->
+    [pr_a a; pr_b b; pr_c c; pr_d d; pr_e e; pr_f f; pr_g g;] |> String.concat ", " |> bracket "(" ")"
+
 (* Print a pair from an association list as "key: value" *)
 let assoc_pair : 'a printer -> 'b printer -> ('a * 'b) printer =
  fun pr_a pr_b (a, b) -> [pr_a a; pr_b b] |> String.concat ": "
