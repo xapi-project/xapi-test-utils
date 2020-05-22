@@ -4,6 +4,5 @@
   (wrapped false)
   (libraries
     threads
-    xapi-stdext-monadic
     alcotest)
 )
